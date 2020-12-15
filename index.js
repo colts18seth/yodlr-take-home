@@ -5,17 +5,25 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('./lib/logger');
 const cors = require('cors');
+const nunjucks = require('nunjucks');
 
 const users = require('./routes/users');
 
 const app = express();
 const log = logger(app);
 
+nunjucks.configure('public/views', {
+    autoescape: true,
+    express: app
+});
+
+app.set('view engine', 'html');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/views')));
 
 app.use('/users', users);
 
